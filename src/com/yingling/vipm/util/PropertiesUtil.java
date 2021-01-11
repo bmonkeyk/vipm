@@ -31,7 +31,6 @@ public class PropertiesUtil {
             return props;
         } else {
             synchronized (PropertiesUtil.class) {
-                props = new Properties();
                 File file = new File(System.getProperty("user.home") + "/" + fileName);
                 try {
                     if (!file.exists()) {
@@ -40,7 +39,7 @@ public class PropertiesUtil {
                         propMap.put("db.port", "3006");
                         propMap.put("db.user", "root");
                         propMap.put("db.pwd", "root");
-                        writeProperty(propMap);
+                        props = writeProperty(propMap);
                     } else {
                         InputStream is = new FileInputStream(file);
                         props.load(is);
@@ -54,12 +53,13 @@ public class PropertiesUtil {
         }
     }
 
-    public void writeProperty(Map<String, String> propMap) {
+    public Properties writeProperty(Map<String, String> propMap) {
         Properties props = this.propertiesMap.get(DEFAULTPROPFILENAME);
         File file = new File(System.getProperty("user.home") + "/" + DEFAULTPROPFILENAME);
         boolean newFlag = false ;
         try {
             if (props == null) {
+                props = new Properties();
                 if (!file.exists()) {
                     file.createNewFile();
                     newFlag = true ;
@@ -79,6 +79,7 @@ public class PropertiesUtil {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        return props;
     }
 
     /**
